@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Document</title>
+</head>
+<body>
+
+ <img src="" alt="">
+ <h2></h2>
+ <p></p>
+
+
+ <script>
+  async function fetchInstagramMeta() {
+   const url = 'https://www.youtube.com/watch?v=Ojd0-vbT3-g';
+   const proxyUrl = `http://localhost:3000/api/meta?url=${encodeURIComponent(url)}`;
+
+   try {
+    const response = await fetch(proxyUrl);
+    const html = await response.text();
+    console.log(html);
+    // get head tag
+
+    document.querySelector('h2').innerText = getTitleData(html)
+
+    document.querySelector('p').innerText = getDescriptionData(html)
+
+    document.querySelector('img').src = getImageData(html)
+
+
+
+   } catch (error) {
+    console.error('Error:', error);
+   }
+  }
+
+  fetchInstagramMeta();
+
+  function getTitleData(html) {
+   // regex to mach title data
+   const titleRegex = /<title.*?>(.*?)<\/title>/i;
+   const titleMatch = html.match(titleRegex);
+   return titleMatch ? titleMatch[1] : 'Title not found';
+  }
+
+  function getDescriptionData(html) {
+   const descriptionRegex = /<meta.*?name="description".*?content="(.*?)".*?>/i;
+   const descriptionMatch = html.match(descriptionRegex);
+
+   return descriptionMatch
+    ? descriptionMatch[1].replace(/&quot;/g, '"')
+    : 'Description not found';
+  }
+
+
+  function getImageData(html) {
+   // regex to mach image data
+   const imageRegex = /<meta.*?property="og:image".*?content="(.*?)".*?>/i;
+   const imageMatch = html.match(imageRegex);
+   return imageMatch ? decodeHtmlEncodedUrl(imageMatch[1]) : 'Image not found';
+  }
+
+  function decodeHtmlEncodedUrl(htmlEncodedUrl) {
+   const textarea = document.createElement('textarea');
+   textarea.innerHTML = htmlEncodedUrl;
+   return textarea.value;
+  }
+
+
+ </script>
+</body>
+</html>
