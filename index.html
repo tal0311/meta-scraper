@@ -14,31 +14,28 @@
 
 
   <script>
+
+
     async function fetchInstagramMeta() {
       const url = 'https://www.youtube.com/watch?v=Ojd0-vbT3-g';
       const proxyUrl = `http://localhost:3000/api/meta?url=${encodeURIComponent(url)}`;
 
       try {
-        const response = await fetch(proxyUrl);
+        const response = await fetch(proxyUrl,
+        );
         const html = await response.text();
         console.log(html);
-        // get head tag
-
         document.querySelector('h2').innerText = getTitleData(html)
-
         document.querySelector('p').innerText = getDescriptionData(html)
-
         document.querySelector('img').src = getImageData(html)
         document.querySelector('#favicon').src = getFaviconData(html)
-
-
-
       } catch (error) {
         console.error('Error:', error);
       }
     }
 
     fetchInstagramMeta();
+
 
     function getTitleData(html) {
       // regex to mach title data
@@ -75,6 +72,15 @@
       const match = html.match(faviconLinkRegex);
       return match ? match[1] : 'Favicon not found';
     }
+
+    // async function getData() {
+    //   const url = 'http://localhost:3000/api/google';
+    //   const res = await fetch(url)
+    //   const data = await res.text()
+    //   console.debug('♠️ ~ file: index.html:83 ~ getData ~ data:', data)
+    // }
+    // getData()
+
 
 
   </script>
